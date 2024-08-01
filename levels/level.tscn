@@ -1,0 +1,52 @@
+[gd_scene load_steps=11 format=3 uid="uid://ic76r0o0ujhv"]
+
+[ext_resource type="Script" path="res://levels/level.gd" id="1_dcjo8"]
+[ext_resource type="PackedScene" uid="uid://clcflu31bv4j2" path="res://entities/player.tscn" id="1_gcbpx"]
+[ext_resource type="Shader" path="res://assets/shaders/base_tile_layer.gdshader" id="2_vqysf"]
+[ext_resource type="PackedScene" uid="uid://0twmlk38guxb" path="res://levels/backdrop.tscn" id="3_jskmg"]
+[ext_resource type="PackedScene" uid="uid://sj4g7uis12yr" path="res://levels/level_top_notifier.tscn" id="4_i2ltj"]
+[ext_resource type="PackedScene" uid="uid://b7x5oly7k0fen" path="res://levels/intro.tscn" id="4_lb1yn"]
+[ext_resource type="PackedScene" uid="uid://c7m36qt2yegka" path="res://levels/shakey_camera_2d.tscn" id="5_sk0bs"]
+[ext_resource type="PackedScene" uid="uid://dv0stgfkdaoj6" path="res://dialogue/dialogue_manager.tscn" id="6_1bqrb"]
+[ext_resource type="PackedScene" uid="uid://lwn5wxbgcm3b" path="res://levels/level_screen_1_notifier.tscn" id="7_m8baa"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sip0n"]
+shader = ExtResource("2_vqysf")
+shader_parameter/luminosity = 0.416
+shader_parameter/saturation = 0.686
+
+[node name="Level" type="Node2D"]
+z_index = 99
+script = ExtResource("1_dcjo8")
+scroll_intro_speed = 100.0
+scroll_speed = 50.0
+
+[node name="DialogueManager" parent="." instance=ExtResource("6_1bqrb")]
+
+[node name="Backdrop" parent="." instance=ExtResource("3_jskmg")]
+
+[node name="Intro" parent="." instance=ExtResource("4_lb1yn")]
+
+[node name="TileMap" type="TileMap" parent="."]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_sip0n")
+position = Vector2(0, -376)
+format = 2
+layer_0/name = "base"
+
+[node name="LevelTopNotifier" parent="TileMap" instance=ExtResource("4_i2ltj")]
+position = Vector2(0, 360)
+
+[node name="LevelScreen1Notifier" parent="TileMap" instance=ExtResource("7_m8baa")]
+
+[node name="Player" parent="." instance=ExtResource("1_gcbpx")]
+position = Vector2(327, 328)
+
+[node name="ShakeyCamera2D" parent="." instance=ExtResource("5_sk0bs")]
+position = Vector2(320, 180)
+
+[connection signal="screen_entered" from="TileMap/LevelTopNotifier" to="." method="_level_top_notifier_screen_entered" flags=6]
+[connection signal="screen_entered" from="TileMap/LevelScreen1Notifier" to="." method="_level_screen_1_notifier_screen_entered" flags=6]
+[connection signal="dash_finished" from="Player" to="." method="_shake_camera"]
+[connection signal="hit" from="Player" to="." method="_shake_camera"]
+[connection signal="shot" from="Player" to="." method="_shake_camera"]

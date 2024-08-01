@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmwifhp7db0uk"]
+
+[ext_resource type="PackedScene" uid="uid://buq8vecuyiy7o" path="res://weapons/weapon.tscn" id="1_56f7t"]
+[ext_resource type="Script" path="res://weapons/weapon_circle.gd" id="2_owi5s"]
+
+[node name="WeaponCircle" instance=ExtResource("1_56f7t")]
+editor_description = "Weapon that fires in concentric circles around the shooter."
+script = ExtResource("2_owi5s")
+circle_size = 0
+num_of_circles = 0
+stagger_circles = false

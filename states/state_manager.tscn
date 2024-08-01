@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://brq88ndc8j6ho"]
+
+[ext_resource type="Script" path="res://states/state_manager.gd" id="1_gbjq5"]
+
+[node name="StateManager" type="Node"]
+editor_description = "Manages the various key states (menus, levels, etc) that the game enters and exits in a stack. Only processing the state at the top of the stack."
+script = ExtResource("1_gbjq5")

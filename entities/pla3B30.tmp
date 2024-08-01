@@ -1,0 +1,74 @@
+[gd_scene load_steps=12 format=3 uid="uid://clcflu31bv4j2"]
+
+[ext_resource type="PackedScene" uid="uid://2wdg0tdbpka8" path="res://entities/character.tscn" id="1_h3gwk"]
+[ext_resource type="Script" path="res://entities/player.gd" id="2_7ynl0"]
+[ext_resource type="Texture2D" uid="uid://bxncgpcrr6g6a" path="res://assets/sprites/obamatron.png" id="3_8yvt5"]
+[ext_resource type="PackedScene" uid="uid://ctm5jl8bn0nn3" path="res://weapons/weapon_straight.tscn" id="4_j74b0"]
+[ext_resource type="PackedScene" uid="uid://bo8cg0ib5yr83" path="res://projectiles/projectile_player_basic.tscn" id="5_bw4hs"]
+[ext_resource type="PackedScene" uid="uid://bliyp2y3xbdiy" path="res://projectiles/projectile.tscn" id="5_enbsq"]
+[ext_resource type="AudioStream" uid="uid://be8k4m8k75ejc" path="res://assets/sounds/playerLaser.wav" id="6_dpahf"]
+[ext_resource type="PackedScene" uid="uid://dmwifhp7db0uk" path="res://weapons/weapon_circle.tscn" id="6_l2xgg"]
+[ext_resource type="PackedScene" uid="uid://de311ak31s67q" path="res://weapons/weapon_arc.tscn" id="7_jq2l5"]
+[ext_resource type="PackedScene" uid="uid://c3t17pksupwex" path="res://weapons/weapon_wave.tscn" id="8_ocf8h"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xw70o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_8yvt5")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Player" groups=["pausable"] instance=ExtResource("1_h3gwk")]
+z_index = 4
+script = ExtResource("2_7ynl0")
+acceleration = 0.4
+max_health = 40
+speed = 600.0
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+sprite_frames = SubResource("SpriteFrames_xw70o")
+
+[node name="CollisionPolygon2D" parent="." index="1"]
+scale = Vector2(0.2, 0.2)
+polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[node name="WeaponStraight" parent="." index="2" instance=ExtResource("4_j74b0")]
+num_of_projectiles = 1
+shoot_up = true
+cooldown = 0.05
+projectile = ExtResource("5_bw4hs")
+projectile_gap = 0.05
+fire_sound = ExtResource("6_dpahf")
+
+[node name="WeaponCircle" parent="." index="3" instance=ExtResource("6_l2xgg")]
+circle_size = 16
+num_of_circles = 4
+stagger_circles = true
+stagger_amount = 0.2
+cooldown = 2.0
+projectile = ExtResource("5_enbsq")
+projectile_gap = 0.5
+
+[node name="WeaponArc" parent="." index="4" instance=ExtResource("7_jq2l5")]
+size_of_arc = 90
+direction = Vector2(-1, 0)
+num_of_shots = 6
+num_of_projectiles = 3
+cooldown = 2.0
+projectile = ExtResource("5_enbsq")
+projectile_gap = 0.3
+
+[node name="WeaponWave" parent="." index="5" instance=ExtResource("8_ocf8h")]
+delta = 10.0
+max_delta = 0.4
+direction = Vector2(-1, 1)
+num_of_projectiles = 30
+cooldown = 2.0
+projectile = ExtResource("5_enbsq")
+projectile_gap = 0.2
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

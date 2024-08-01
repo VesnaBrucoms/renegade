@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://bliyp2y3xbdiy"]
+
+[ext_resource type="Script" path="res://projectiles/projectile.gd" id="1_j1nfg"]
+
+[node name="Projectile" type="Area2D" groups=["projectiles"]]
+editor_description = "Base object for projectiles."
+script = ExtResource("1_j1nfg")
+damage = 10
+speed = 100
+is_player_weapon = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier2D" parent="."]
+
+[connection signal="screen_exited" from="VisibilityNotifier" to="." method="_visibility_notifier_screen_exited"]

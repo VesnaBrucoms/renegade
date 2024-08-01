@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://bf0xv2po2r6xp"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_gqsdx"]
+[ext_resource type="PackedScene" uid="uid://brq88ndc8j6ho" path="res://states/state_manager.tscn" id="2_3w34s"]
+[ext_resource type="PackedScene" uid="uid://bwptmb7uytce0" path="res://states/level_state.tscn" id="3_mlwym"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_gqsdx")
+
+[node name="StateManager" parent="." instance=ExtResource("2_3w34s")]
+initial_state = "Level"
+
+[node name="LevelState" parent="StateManager" instance=ExtResource("3_mlwym")]

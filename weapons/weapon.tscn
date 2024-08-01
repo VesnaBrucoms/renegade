@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://buq8vecuyiy7o"]
+
+[ext_resource type="Script" path="res://weapons/weapon.gd" id="1_y6sdh"]
+[ext_resource type="PackedScene" uid="uid://cx2vfhayjj8ky" path="res://audio/random_stream_player.tscn" id="2_q1krb"]
+
+[node name="Weapon" type="Node"]
+editor_description = "Base object for all weapons."
+script = ExtResource("1_y6sdh")
+
+[node name="CooldownTimer" type="Timer" parent="."]
+
+[node name="GapTimer" type="Timer" parent="."]
+
+[node name="FireSound" parent="." instance=ExtResource("2_q1krb")]
+highest_pitch = 1.1
+
+[connection signal="timeout" from="CooldownTimer" to="." method="_cooldown_timer_timeout"]
+[connection signal="timeout" from="GapTimer" to="." method="_gap_timer_timeout"]

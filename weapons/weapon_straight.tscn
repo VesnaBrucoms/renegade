@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctm5jl8bn0nn3"]
+
+[ext_resource type="PackedScene" uid="uid://buq8vecuyiy7o" path="res://weapons/weapon.tscn" id="1_s8mf1"]
+[ext_resource type="Script" path="res://weapons/weapon_straight.gd" id="2_v1ifx"]
+
+[node name="WeaponStraight" instance=ExtResource("1_s8mf1")]
+editor_description = "Weapon that fires in straight lines along the cardinal directions."
+script = ExtResource("2_v1ifx")
+num_of_projectiles = 0
+shoot_up = false
+shoot_right = false
+shoot_down = false
+shoot_left = false

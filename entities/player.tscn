@@ -1,0 +1,178 @@
+[gd_scene load_steps=25 format=3 uid="uid://clcflu31bv4j2"]
+
+[ext_resource type="Script" path="res://entities/player.gd" id="2_7ynl0"]
+[ext_resource type="Texture2D" uid="uid://dc1qc47hah4io" path="res://assets/sprites/player.png" id="2_048to"]
+[ext_resource type="Texture2D" uid="uid://d2y1xn3do7mrr" path="res://assets/sprites/player_drained.png" id="3_yyuyw"]
+[ext_resource type="PackedScene" uid="uid://ctm5jl8bn0nn3" path="res://weapons/weapon_straight.tscn" id="4_j74b0"]
+[ext_resource type="PackedScene" uid="uid://bo8cg0ib5yr83" path="res://projectiles/projectile_player_basic.tscn" id="5_bw4hs"]
+[ext_resource type="AudioStream" uid="uid://be8k4m8k75ejc" path="res://assets/sounds/playerLaser.wav" id="6_dpahf"]
+[ext_resource type="Texture2D" uid="uid://cpyqv0u4dqmww" path="res://assets/sprites/particles/particle_base.png" id="6_n1pak"]
+[ext_resource type="AudioStream" uid="uid://c75ls6ypccfe5" path="res://assets/sounds/player_hit.wav" id="7_g4iln"]
+[ext_resource type="PackedScene" uid="uid://cx2vfhayjj8ky" path="res://audio/random_stream_player.tscn" id="8_oshx5"]
+[ext_resource type="Texture2D" uid="uid://djygymbr1qbcw" path="res://assets/sprites/particles/dash_particles.png" id="9_86wi0"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ckekn"]
+radius = 4.0
+height = 10.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xqxxd"]
+radius = 8.0
+height = 20.0
+
+[sub_resource type="Curve" id="Curve_233pr"]
+min_value = -1.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_iwj38"]
+curve = SubResource("Curve_233pr")
+
+[sub_resource type="Curve" id="Curve_hbmvd"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.713333, 0.571429), -0.753532, -0.753532, 0, 0, Vector2(0.993333, 0.054945), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_0hh8d"]
+curve = SubResource("Curve_hbmvd")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_p3ouk"]
+particle_flag_disable_z = true
+angle_max = 90.0
+direction = Vector3(0, 0, 0)
+spread = 20.0
+initial_velocity_min = 120.0
+initial_velocity_max = 140.0
+gravity = Vector3(0, 0, 0)
+scale_max = 3.0
+scale_curve = SubResource("CurveTexture_0hh8d")
+hue_variation_min = 0.95
+hue_variation_max = 1.0
+hue_variation_curve = SubResource("CurveTexture_iwj38")
+
+[sub_resource type="Curve" id="Curve_7x56g"]
+max_value = 100.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.813333, 7.69231), 54.945, 54.945, 0, 0, Vector2(1, 100), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_5qvdt"]
+curve = SubResource("Curve_7x56g")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wvimb"]
+particle_flag_disable_z = true
+direction = Vector3(1, 1, 0)
+spread = 180.0
+initial_velocity_min = 32.0
+initial_velocity_max = 36.0
+gravity = Vector3(0, 0, 0)
+damping_min = 5.0
+damping_max = 5.0
+damping_curve = SubResource("CurveTexture_5qvdt")
+color = Color(1, 0, 0, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_sqrfd"]
+particles_animation = true
+particles_anim_h_frames = 4
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_u654m"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_jk7k6"]
+curve = SubResource("Curve_u654m")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7v7so"]
+lifetime_randomness = 0.3
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 10.0
+initial_velocity_max = 30.0
+angular_velocity_min = 60.0
+angular_velocity_max = 120.0
+radial_velocity_min = 20.0
+radial_velocity_max = 60.0
+gravity = Vector3(0, 0, 0)
+linear_accel_max = 5.0
+linear_accel_curve = SubResource("CurveTexture_jk7k6")
+damping_min = 1.0
+damping_max = 5.0
+anim_offset_max = 1.0
+
+[node name="Player" type="Area2D"]
+z_index = 5
+script = ExtResource("2_7ynl0")
+top_speed = 200.0
+dash_speed = 800.0
+drained_speed = 150.0
+acceleration = 30.0
+dash_acceleration = 240.0
+max_health = 40
+sprite_half_width = 8
+sprite_half_height = 6
+
+[node name="MainSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_048to")
+
+[node name="DrainedSprite" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_yyuyw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_ckekn")
+
+[node name="DashCollisionShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_xqxxd")
+disabled = true
+
+[node name="DashTimer" type="Timer" parent="."]
+wait_time = 0.1
+
+[node name="DrainedTimer" type="Timer" parent="."]
+wait_time = 1.1
+
+[node name="WeaponStraight" parent="." instance=ExtResource("4_j74b0")]
+num_of_projectiles = 1
+shoot_up = true
+cooldown = 0.05
+projectile = ExtResource("5_bw4hs")
+projectile_gap = 0.05
+fire_sound = ExtResource("6_dpahf")
+
+[node name="WeaponSpray" type="GPUParticles2D" parent="."]
+modulate = Color(0, 0, 0.847059, 1)
+position = Vector2(0, -4)
+emitting = false
+amount = 6
+process_material = SubResource("ParticleProcessMaterial_p3ouk")
+texture = ExtResource("6_n1pak")
+lifetime = 0.4
+speed_scale = 3.0
+explosiveness = 1.0
+randomness = 0.2
+
+[node name="HitSound" parent="." instance=ExtResource("8_oshx5")]
+stream = ExtResource("7_g4iln")
+
+[node name="DashFinishSpray" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 16
+process_material = SubResource("ParticleProcessMaterial_wvimb")
+texture = ExtResource("6_n1pak")
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+
+[node name="DashSpray" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_sqrfd")
+scale = Vector2(1, 0.991799)
+emitting = false
+amount = 64
+process_material = SubResource("ParticleProcessMaterial_7v7so")
+texture = ExtResource("9_86wi0")
+explosiveness = 0.7
+fixed_fps = 60
+
+[connection signal="area_entered" from="." to="." method="_area_entered"]
+[connection signal="timeout" from="DashTimer" to="." method="_dash_timer_timeout"]
+[connection signal="timeout" from="DrainedTimer" to="." method="_drained_timer_timeout"]

@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://hrj22ka7hkla"]
+
+[ext_resource type="PackedScene" uid="uid://b6oisbdbfalfp" path="res://movement_patterns/movement_action.tscn" id="1_unlhk"]
+[ext_resource type="Script" path="res://movement_patterns/movement_action_to_location.gd" id="2_d8rj2"]
+
+[node name="MovementActionToLocation" instance=ExtResource("1_unlhk")]
+editor_description = "Movement action that moves to the specified direction."
+script = ExtResource("2_d8rj2")
+destination = Vector2(0, 0)
+override_speed = 0.0
+use_acceleration = false
+acceleration = 0.0

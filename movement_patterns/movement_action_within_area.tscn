@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://kgwg3eb0a8l6"]
+
+[ext_resource type="PackedScene" uid="uid://b6oisbdbfalfp" path="res://movement_patterns/movement_action.tscn" id="1_iwg41"]
+[ext_resource type="Script" path="res://movement_patterns/movement_action_within_area.gd" id="2_41hso"]
+
+[node name="MovementActionWithinArea" instance=ExtResource("1_iwg41")]
+script = ExtResource("2_41hso")
+centre = Vector2(0, 0)
+radius = 0.0
+override_speed = 0.0
+use_acceleration = false
+acceleration = 0.0

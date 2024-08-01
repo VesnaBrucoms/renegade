@@ -1,0 +1,100 @@
+[gd_scene load_steps=20 format=3 uid="uid://bdmih58aq0qxa"]
+
+[ext_resource type="PackedScene" uid="uid://kyvsbtipl0jy" path="res://entities/enemy.tscn" id="1_u2raf"]
+[ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="2_6ysau"]
+[ext_resource type="Script" path="res://entities/shooter_crystal.gd" id="2_68inx"]
+[ext_resource type="Shader" path="res://assets/shaders/shimmer.gdshader" id="3_7djye"]
+[ext_resource type="Texture2D" uid="uid://dsrcwbvoy7clr" path="res://assets/sprites/entities/small_crystal.png" id="3_8bf7d"]
+[ext_resource type="AudioStream" uid="uid://d0m2qlb47mpsq" path="res://assets/sounds/enemy_hit.wav" id="3_337jo"]
+[ext_resource type="Material" uid="uid://b28bm5s2rby06" path="res://assets/particles/small_enter_immunity_ring.tres" id="5_4pcxe"]
+[ext_resource type="Material" uid="uid://xfwyn5r6tkfy" path="res://assets/particles/tiny_crystal_death_spray.tres" id="6_v4x5q"]
+[ext_resource type="PackedScene" uid="uid://hrj22ka7hkla" path="res://movement_patterns/movement_action_to_location.tscn" id="7_oopl3"]
+[ext_resource type="PackedScene" uid="uid://kgwg3eb0a8l6" path="res://movement_patterns/movement_action_within_area.tscn" id="8_iniye"]
+[ext_resource type="PackedScene" uid="uid://dk4xdwdopdgyc" path="res://movement_patterns/movement_action_wait_for.tscn" id="10_e5uu3"]
+[ext_resource type="PackedScene" uid="uid://ctm5jl8bn0nn3" path="res://weapons/weapon_straight.tscn" id="12_q0rdd"]
+[ext_resource type="PackedScene" uid="uid://cpx0vexoruo13" path="res://projectiles/projectile_enemy_basic.tscn" id="13_jq3dp"]
+[ext_resource type="AudioStream" uid="uid://cw3jjctemgmjo" path="res://assets/sounds/mookLaser.wav" id="14_nt30o"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lptgd"]
+resource_local_to_scene = true
+shader = ExtResource("2_6ysau")
+shader_parameter/red_intensity = 0.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6wu2w"]
+noise_type = 0
+seed = 1
+frequency = 0.0009
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ojgmd"]
+seamless = true
+noise = SubResource("FastNoiseLite_6wu2w")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_il16b"]
+resource_local_to_scene = true
+shader = ExtResource("3_7djye")
+shader_parameter/noise_scroll = 0.2
+shader_parameter/distortion = 0.05
+shader_parameter/shade = Color(0.0862745, 0.635294, 1, 1)
+shader_parameter/specular_colour = Color(0.2, 0.2, 1, 1)
+shader_parameter/light_start = 0.275
+shader_parameter/light_end = 0.4
+shader_parameter/noise = SubResource("NoiseTexture2D_ojgmd")
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2b1dm"]
+radius = 9.0
+height = 28.0
+
+[node name="ShooterCrystal" instance=ExtResource("1_u2raf")]
+script = ExtResource("2_68inx")
+enter_destination = Vector2(0, 0)
+active_dart_centre = Vector2(0, 0)
+active_dart_radius = 0.0
+max_health = 20
+speed = 100.0
+hit_sound = ExtResource("3_337jo")
+death_camera_shake_intensity = 3.0
+
+[node name="MainSprite" parent="." index="0"]
+material = SubResource("ShaderMaterial_lptgd")
+texture = ExtResource("3_8bf7d")
+
+[node name="EnteringSprite" parent="." index="1"]
+material = SubResource("ShaderMaterial_il16b")
+texture = ExtResource("3_8bf7d")
+
+[node name="EnteringRing" parent="." index="2"]
+process_material = ExtResource("5_4pcxe")
+
+[node name="CollisionShape2D" parent="." index="3"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_2b1dm")
+
+[node name="MovementPattern" parent="." index="5"]
+active_repeatable = true
+active_num_of_loops = 3
+
+[node name="Enter" parent="MovementPattern" index="0" instance=ExtResource("7_oopl3")]
+use_acceleration = true
+acceleration = 4.0
+
+[node name="Dart" parent="MovementPattern" index="1" instance=ExtResource("8_iniye")]
+use_acceleration = true
+acceleration = 5.0
+action_group = 2
+
+[node name="Shoot" parent="MovementPattern" index="2" instance=ExtResource("10_e5uu3")]
+action_group = 2
+
+[node name="DeathSpray" parent="." index="9"]
+emitting = false
+process_material = ExtResource("6_v4x5q")
+
+[node name="WeaponStraight" parent="." index="10" instance=ExtResource("12_q0rdd")]
+num_of_projectiles = 5
+shoot_down = true
+cooldown = 0.05
+projectile = ExtResource("13_jq3dp")
+projectile_gap = 0.3
+fire_sound = ExtResource("14_nt30o")
+actions_to_fire = Array[String](["Shoot"])

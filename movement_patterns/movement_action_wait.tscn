@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://20koxrawsneo"]
+
+[ext_resource type="PackedScene" uid="uid://b6oisbdbfalfp" path="res://movement_patterns/movement_action.tscn" id="1_obc3c"]
+[ext_resource type="Script" path="res://movement_patterns/movement_action_wait.gd" id="2_fo72m"]
+
+[node name="MovementActionWait" instance=ExtResource("1_obc3c")]
+editor_description = "Movement action that simply waits for the specified length of time in secnds."
+script = ExtResource("2_fo72m")
+duration = 1.0
+
+[node name="WaitTimer" type="Timer" parent="." index="0"]
+
+[connection signal="timeout" from="WaitTimer" to="." method="_wait_timer_timeout"]

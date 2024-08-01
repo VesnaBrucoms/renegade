@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://bo8cg0ib5yr83"]
+
+[ext_resource type="PackedScene" uid="uid://bliyp2y3xbdiy" path="res://projectiles/projectile.tscn" id="1_x2efb"]
+[ext_resource type="Texture2D" uid="uid://cygd4iurw3vws" path="res://assets/sprites/projectiles/player_basic.png" id="2_tqv37"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hbkal"]
+radius = 8.0
+
+[node name="ProjectilePlayerBasic" instance=ExtResource("1_x2efb")]
+speed = 1000
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_tqv37")
+
+[node name="CollisionShape2D" parent="." index="1"]
+shape = SubResource("CircleShape2D_hbkal")

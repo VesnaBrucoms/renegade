@@ -1,0 +1,19 @@
+[gd_resource type="ParticleProcessMaterial" load_steps=3 format=3 uid="uid://chdkfwqwqcgu5"]
+
+[sub_resource type="Curve" id="Curve_0bhfs"]
+_data = [Vector2(0.0866667, 0.131868), 0.0, 0.0, 0, 0, Vector2(0.493333, 0.945055), 0.0, 0.0, 0, 0, Vector2(1, 0.252747), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_61raw"]
+curve = SubResource("Curve_0bhfs")
+
+[resource]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+angle_max = 90.0
+spread = 180.0
+initial_velocity_min = 160.0
+initial_velocity_max = 200.0
+scale_max = 3.0
+scale_curve = SubResource("CurveTexture_61raw")
+color = Color(1, 0.658824, 0.188235, 1)

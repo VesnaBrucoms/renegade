@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://lwn5wxbgcm3b"]
+
+[ext_resource type="Script" path="res://levels/level_screen_1_notifier.gd" id="1_2jkwe"]
+
+[node name="LevelScreen1Notifier" type="VisibleOnScreenNotifier2D"]
+rect = Rect2(0, 0, 640, 10)
+script = ExtResource("1_2jkwe")

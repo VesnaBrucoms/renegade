@@ -1,0 +1,149 @@
+[gd_scene load_steps=19 format=3 uid="uid://ny0xemah05fr"]
+
+[ext_resource type="PackedScene" uid="uid://cut7yhbkg1h2f" path="res://bosses/boss.tscn" id="1_8o5t7"]
+[ext_resource type="Texture2D" uid="uid://dmrvo7d3iffq1" path="res://assets/sprites/entities/medium_crystal.png" id="2_vw7io"]
+[ext_resource type="Material" uid="uid://bqt1lm1b5at26" path="res://assets/particles/medium_enter_immunity_ring.tres" id="3_dydde"]
+[ext_resource type="PackedScene" uid="uid://bdhewpp3kr4jy" path="res://dialogue/dialogue_line.tscn" id="3_o6nqu"]
+[ext_resource type="PackedScene" uid="uid://hrj22ka7hkla" path="res://movement_patterns/movement_action_to_location.tscn" id="3_sfrlp"]
+[ext_resource type="Shader" path="res://assets/shaders/shimmer.gdshader" id="3_tlgrp"]
+[ext_resource type="PackedScene" uid="uid://20koxrawsneo" path="res://movement_patterns/movement_action_wait.tscn" id="4_7a6hj"]
+[ext_resource type="AudioStream" uid="uid://d0m2qlb47mpsq" path="res://assets/sounds/enemy_hit.wav" id="5_kh3c7"]
+[ext_resource type="Material" uid="uid://chdkfwqwqcgu5" path="res://assets/particles/enemy_hit_spray.tres" id="6_tqhk2"]
+[ext_resource type="Texture2D" uid="uid://cpyqv0u4dqmww" path="res://assets/sprites/particles/particle_base.png" id="7_7bjcp"]
+[ext_resource type="PackedScene" uid="uid://de311ak31s67q" path="res://weapons/weapon_arc.tscn" id="7_370o7"]
+[ext_resource type="PackedScene" uid="uid://cpx0vexoruo13" path="res://projectiles/projectile_enemy_basic.tscn" id="8_un18r"]
+[ext_resource type="AudioStream" uid="uid://bgp7yla7revyj" path="res://assets/sounds/bossLaser.wav" id="9_txrdq"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_65i8j"]
+frequency = 0.0036
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5cxkr"]
+seamless = true
+noise = SubResource("FastNoiseLite_65i8j")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nol7i"]
+resource_local_to_scene = true
+shader = ExtResource("3_tlgrp")
+shader_parameter/noise_scroll = 0.2
+shader_parameter/distortion = 0.0580001
+shader_parameter/shade = Color(0.75, 0.78, 0.9, 1)
+shader_parameter/specular_colour = Color(0.2, 0.2, 1, 1)
+shader_parameter/light_start = 0.792
+shader_parameter/light_end = 0.917
+shader_parameter/noise = SubResource("NoiseTexture2D_5cxkr")
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6oeak"]
+radius = 16.0
+height = 54.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mvacd"]
+radius = 7.19615
+
+[node name="MediumCrystal" instance=ExtResource("1_8o5t7")]
+max_health = 800
+speed = 60.0
+death_camera_shake_intensity = 20.0
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_vw7io")
+
+[node name="EnteringSprite" parent="." index="1"]
+material = SubResource("ShaderMaterial_nol7i")
+texture = ExtResource("2_vw7io")
+
+[node name="EnteringRing" parent="." index="2"]
+amount = 32
+process_material = ExtResource("3_dydde")
+
+[node name="CollisionShape2D" parent="." index="3"]
+position = Vector2(0, -10)
+shape = SubResource("CapsuleShape2D_6oeak")
+
+[node name="CollisionShape2DLeft" type="CollisionShape2D" parent="." index="4"]
+position = Vector2(-14, -8)
+rotation = -0.436332
+shape = SubResource("CapsuleShape2D_mvacd")
+
+[node name="CollisionShape2DRight" type="CollisionShape2D" parent="." index="5"]
+position = Vector2(14, -8)
+rotation = 0.436332
+shape = SubResource("CapsuleShape2D_mvacd")
+
+[node name="DialogueLine1" parent="DialogueIntro" index="0" instance=ExtResource("3_o6nqu")]
+speaker_name = "Medium Crystal"
+line = "You! It’s you!"
+faction = 1
+
+[node name="DialogueLine2" parent="DialogueIntro" index="1" instance=ExtResource("3_o6nqu")]
+speaker_name = "Medium Crystal"
+line = "You will pay with your life for what you did."
+faction = 1
+
+[node name="DialogueLine" parent="DialogueOutro" index="0" instance=ExtResource("3_o6nqu")]
+speaker_name = "Medium Crystal"
+line = "Nooooo!"
+faction = 1
+
+[node name="MovementPattern" parent="." index="8"]
+active_repeatable = true
+
+[node name="MovementActionToLocation" parent="MovementPattern" index="0" instance=ExtResource("3_sfrlp")]
+destination = Vector2(320, 70)
+
+[node name="MovementActionWait" parent="MovementPattern" index="1" instance=ExtResource("4_7a6hj")]
+
+[node name="MoveToLeft" parent="MovementPattern" index="2" instance=ExtResource("3_sfrlp")]
+destination = Vector2(80, 100)
+override_speed = 120.0
+use_acceleration = true
+acceleration = 5.0
+action_group = 2
+
+[node name="ShootLeft" parent="MovementPattern" index="3" instance=ExtResource("4_7a6hj")]
+duration = 8.0
+action_group = 2
+
+[node name="MoveToRight" parent="MovementPattern" index="4" instance=ExtResource("3_sfrlp")]
+destination = Vector2(560, 100)
+override_speed = 120.0
+use_acceleration = true
+acceleration = 5.0
+action_group = 2
+
+[node name="ShootRight" parent="MovementPattern" index="5" instance=ExtResource("4_7a6hj")]
+duration = 8.0
+action_group = 2
+
+[node name="HitSpray" parent="." index="9"]
+emitting = false
+amount = 16
+process_material = ExtResource("6_tqhk2")
+texture = ExtResource("7_7bjcp")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+
+[node name="LeftArc" parent="." index="10" instance=ExtResource("7_370o7")]
+size_of_arc = 110
+direction = Vector2(1, 0)
+num_of_shots = 6
+num_of_projectiles = 15
+cooldown = 1.0
+projectile = ExtResource("8_un18r")
+projectile_gap = 0.5
+fire_sound = ExtResource("9_txrdq")
+actions_to_fire = Array[String](["ShootLeft"])
+
+[node name="RightArc" parent="." index="11" instance=ExtResource("7_370o7")]
+size_of_arc = 110
+direction = Vector2(0, 1)
+num_of_shots = 6
+num_of_projectiles = 15
+cooldown = 1.0
+projectile = ExtResource("8_un18r")
+projectile_gap = 0.5
+fire_sound = ExtResource("9_txrdq")
+actions_to_fire = Array[String](["ShootRight"])
+
+[node name="HitSound" parent="." index="12"]
+stream = ExtResource("5_kh3c7")

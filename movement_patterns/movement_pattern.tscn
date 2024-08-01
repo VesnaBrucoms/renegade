@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkwtwsxvi0gwm"]
+
+[ext_resource type="Script" path="res://movement_patterns/movement_pattern.gd" id="1_o3v0c"]
+
+[node name="MovementPattern" type="Node"]
+editor_description = "Base object for all movement patterns."
+script = ExtResource("1_o3v0c")

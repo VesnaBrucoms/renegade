@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7m36qt2yegka"]
+
+[ext_resource type="Script" path="res://levels/shakey_camera_2d.gd" id="1_qa7p4"]
+
+[node name="ShakeyCamera2D" type="Camera2D"]
+script = ExtResource("1_qa7p4")
+shake_fade = 5.0

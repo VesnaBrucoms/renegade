@@ -1,0 +1,129 @@
+[gd_scene load_steps=21 format=3 uid="uid://k1k1f4rs0l47"]
+
+[ext_resource type="PackedScene" uid="uid://kyvsbtipl0jy" path="res://entities/enemy.tscn" id="1_47did"]
+[ext_resource type="Script" path="res://entities/small_crystal.gd" id="2_6bcti"]
+[ext_resource type="AudioStream" uid="uid://d0m2qlb47mpsq" path="res://assets/sounds/enemy_hit.wav" id="2_g7582"]
+[ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="3_l3e5m"]
+[ext_resource type="Texture2D" uid="uid://dsrcwbvoy7clr" path="res://assets/sprites/entities/small_crystal.png" id="4_lmpww"]
+[ext_resource type="PackedScene" uid="uid://hrj22ka7hkla" path="res://movement_patterns/movement_action_to_location.tscn" id="5_bru8g"]
+[ext_resource type="Shader" path="res://assets/shaders/shimmer.gdshader" id="6_waoik"]
+[ext_resource type="PackedScene" uid="uid://20koxrawsneo" path="res://movement_patterns/movement_action_wait.tscn" id="6_yggve"]
+[ext_resource type="Material" uid="uid://b28bm5s2rby06" path="res://assets/particles/small_enter_immunity_ring.tres" id="7_wy527"]
+[ext_resource type="PackedScene" uid="uid://c3t17pksupwex" path="res://weapons/weapon_wave.tscn" id="8_k8tm4"]
+[ext_resource type="PackedScene" uid="uid://cpx0vexoruo13" path="res://projectiles/projectile_enemy_basic.tscn" id="9_6u3dx"]
+[ext_resource type="AudioStream" uid="uid://cw3jjctemgmjo" path="res://assets/sounds/mookLaser.wav" id="10_eoajg"]
+[ext_resource type="Texture2D" uid="uid://dh20yypdv13jr" path="res://assets/shaders/gradient_circle_small.png" id="11_bm2i0"]
+[ext_resource type="Material" uid="uid://xfwyn5r6tkfy" path="res://assets/particles/tiny_crystal_death_spray.tres" id="11_tlmqa"]
+[ext_resource type="Texture2D" uid="uid://cpyqv0u4dqmww" path="res://assets/sprites/particles/particle_base.png" id="12_cc0jr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_anqr5"]
+resource_local_to_scene = true
+shader = ExtResource("3_l3e5m")
+shader_parameter/red_intensity = 0.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6wu2w"]
+noise_type = 0
+seed = 1
+frequency = 0.0009
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ojgmd"]
+seamless = true
+noise = SubResource("FastNoiseLite_6wu2w")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0h33x"]
+resource_local_to_scene = true
+shader = ExtResource("6_waoik")
+shader_parameter/noise_scroll = 0.2
+shader_parameter/distortion = 0.125
+shader_parameter/shade = Color(0.75, 0.78, 0.9, 1)
+shader_parameter/specular_colour = Color(0.2, 0.2, 1, 1)
+shader_parameter/light_start = 0.792
+shader_parameter/light_end = 0.917
+shader_parameter/noise = SubResource("NoiseTexture2D_ojgmd")
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rbgaf"]
+height = 26.0
+
+[node name="SmallCrystal" instance=ExtResource("1_47did")]
+scale = Vector2(1, 1.00357)
+script = ExtResource("2_6bcti")
+enter_destination = Vector2(0, 0)
+enter_speed = 0.0
+enter_acceleration = 0.0
+shoot1_duration = 1.0
+move1_destination = Vector2(0, 0)
+move1_speed = 0.0
+move1_acceleration = 0.0
+shoot2_duration = 1.0
+move2_destination = Vector2(0, 0)
+move2_speed = 0.0
+move2_acceleration = 0.0
+shoot3_duration = 1.0
+exit_destination = Vector2(0, 0)
+exit_speed = 0.0
+exit_acceleration = 0.0
+max_health = 160
+hit_sound = ExtResource("2_g7582")
+death_camera_shake_intensity = 10.0
+
+[node name="MainSprite" parent="." index="0"]
+material = SubResource("ShaderMaterial_anqr5")
+texture = ExtResource("4_lmpww")
+
+[node name="EnteringSprite" parent="." index="1"]
+material = SubResource("ShaderMaterial_0h33x")
+texture = ExtResource("4_lmpww")
+
+[node name="EnteringRing" parent="." index="2"]
+amount = 40
+process_material = ExtResource("7_wy527")
+
+[node name="CollisionShape2D" parent="." index="3"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_rbgaf")
+
+[node name="Enter" parent="MovementPattern" index="0" instance=ExtResource("5_bru8g")]
+use_acceleration = true
+acceleration = 5.0
+
+[node name="Shoot1" parent="MovementPattern" index="1" instance=ExtResource("6_yggve")]
+action_group = 2
+
+[node name="Move1" parent="MovementPattern" index="2" instance=ExtResource("5_bru8g")]
+action_group = 2
+
+[node name="Shoot2" parent="MovementPattern" index="3" instance=ExtResource("6_yggve")]
+action_group = 2
+
+[node name="Move2" parent="MovementPattern" index="4" instance=ExtResource("5_bru8g")]
+action_group = 2
+
+[node name="Shoot3" parent="MovementPattern" index="5" instance=ExtResource("6_yggve")]
+action_group = 2
+
+[node name="Exit" parent="MovementPattern" index="6" instance=ExtResource("5_bru8g")]
+action_group = 2
+
+[node name="Primary" parent="." index="6" instance=ExtResource("8_k8tm4")]
+delta = 4.0
+max_delta = 0.4
+direction = Vector2(0, 0.4)
+num_of_projectiles = 20
+cooldown = 0.5
+projectile = ExtResource("9_6u3dx")
+projectile_gap = 0.25
+fire_sound = ExtResource("10_eoajg")
+actions_to_fire = Array[String](["Shoot1", "Shoot2", "Shoot3"])
+
+[node name="DeathExplosion" parent="." index="9"]
+texture = ExtResource("11_bm2i0")
+
+[node name="DeathSpray" parent="." index="10"]
+emitting = false
+amount = 32
+process_material = ExtResource("11_tlmqa")
+texture = ExtResource("12_cc0jr")
+lifetime = 0.55
+one_shot = true
+explosiveness = 1.0

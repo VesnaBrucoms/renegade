@@ -1,0 +1,50 @@
+[gd_scene load_steps=11 format=3 uid="uid://cdjwcro7j7b0c"]
+
+[ext_resource type="PackedScene" uid="uid://kyvsbtipl0jy" path="res://entities/enemy.tscn" id="1_bft0e"]
+[ext_resource type="Script" path="res://entities/enemy_stop.gd" id="2_4kmq2"]
+[ext_resource type="PackedScene" uid="uid://de311ak31s67q" path="res://weapons/weapon_arc.tscn" id="2_himv3"]
+[ext_resource type="AudioStream" uid="uid://d0m2qlb47mpsq" path="res://assets/sounds/enemy_hit.wav" id="3_42ubg"]
+[ext_resource type="PackedScene" uid="uid://hrj22ka7hkla" path="res://movement_patterns/movement_action_to_location.tscn" id="3_f8ny6"]
+[ext_resource type="PackedScene" uid="uid://cpx0vexoruo13" path="res://projectiles/projectile_enemy_basic.tscn" id="3_q1t3k"]
+[ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="4_32bld"]
+[ext_resource type="AudioStream" uid="uid://cw3jjctemgmjo" path="res://assets/sounds/mookLaser.wav" id="4_b0nbp"]
+[ext_resource type="PackedScene" uid="uid://20koxrawsneo" path="res://movement_patterns/movement_action_wait.tscn" id="4_xovpv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ewxcj"]
+resource_local_to_scene = true
+shader = ExtResource("4_32bld")
+shader_parameter/red_intensity = 0.0
+
+[node name="EnemyStop" instance=ExtResource("1_bft0e")]
+script = ExtResource("2_4kmq2")
+enter_destination = Vector2(0, 0)
+shoot_duration = 0.0
+max_health = 120
+speed = 60.0
+hit_sound = ExtResource("3_42ubg")
+death_camera_shake_intensity = 8.0
+
+[node name="Sprite2D" parent="." index="0"]
+material = SubResource("ShaderMaterial_ewxcj")
+
+[node name="Enter" parent="MovementPattern" index="0" instance=ExtResource("3_f8ny6")]
+destination = Vector2(0, 60)
+override_speed = 120.0
+use_acceleration = true
+acceleration = 2.0
+
+[node name="Shoot" parent="MovementPattern" index="1" instance=ExtResource("4_xovpv")]
+
+[node name="Primary" parent="." index="4" instance=ExtResource("2_himv3")]
+size_of_arc = 90
+direction = Vector2(0.5, 0.5)
+num_of_shots = 10
+num_of_projectiles = 5
+cooldown = 1.5
+projectile = ExtResource("3_q1t3k")
+projectile_gap = 0.5
+fire_sound = ExtResource("4_b0nbp")
+actions_to_fire = Array[String](["Shoot"])
+
+[node name="HitSound" parent="." index="5"]
+stream = ExtResource("3_42ubg")

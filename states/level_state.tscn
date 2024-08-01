@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwptmb7uytce0"]
+
+[ext_resource type="Script" path="res://states/level_state.gd" id="1_3hrd5"]
+[ext_resource type="PackedScene" uid="uid://m8spbelxkjee" path="res://levels/level_1.tscn" id="2_d4i5d"]
+
+[node name="LevelState" type="Node"]
+process_mode = 4
+script = ExtResource("1_3hrd5")
+loaded_level = ExtResource("2_d4i5d")
+unique_name = "Level"

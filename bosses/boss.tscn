@@ -1,0 +1,104 @@
+[gd_scene load_steps=15 format=3 uid="uid://cut7yhbkg1h2f"]
+
+[ext_resource type="Script" path="res://bosses/boss.gd" id="1_cv5hw"]
+[ext_resource type="PackedScene" uid="uid://bkwtwsxvi0gwm" path="res://movement_patterns/movement_pattern.tscn" id="1_mt3vj"]
+[ext_resource type="PackedScene" uid="uid://b0nc3ituq4b78" path="res://dialogue/dialogue.tscn" id="2_nfoym"]
+[ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="2_t5ihu"]
+[ext_resource type="Shader" path="res://assets/shaders/shimmer.gdshader" id="3_6bhcy"]
+[ext_resource type="Texture2D" uid="uid://cpyqv0u4dqmww" path="res://assets/sprites/particles/particle_base.png" id="4_givfo"]
+[ext_resource type="PackedScene" uid="uid://cx2vfhayjj8ky" path="res://audio/random_stream_player.tscn" id="7_en2of"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_636ge"]
+shader = ExtResource("2_t5ihu")
+shader_parameter/red_intensity = 0.0
+
+[sub_resource type="Animation" id="Animation_4ya4f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/red_intensity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_s40b2"]
+resource_name = "hit_flash"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/red_intensity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fhblo"]
+_data = {
+"RESET": SubResource("Animation_4ya4f"),
+"hit_flash": SubResource("Animation_s40b2")
+}
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_65i8j"]
+frequency = 0.0036
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5cxkr"]
+seamless = true
+noise = SubResource("FastNoiseLite_65i8j")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_foq0j"]
+resource_local_to_scene = true
+shader = ExtResource("3_6bhcy")
+shader_parameter/noise_scroll = 0.2
+shader_parameter/distortion = 0.103
+shader_parameter/shade = Color(0.75, 0.78, 0.9, 1)
+shader_parameter/specular_colour = Color(0.2, 0.2, 1, 1)
+shader_parameter/light_start = 0.792
+shader_parameter/light_end = 0.917
+shader_parameter/noise = SubResource("NoiseTexture2D_5cxkr")
+
+[node name="Boss" type="Area2D"]
+script = ExtResource("1_cv5hw")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_636ge")
+
+[node name="HitFlashAnimation" type="AnimationPlayer" parent="Sprite2D"]
+libraries = {
+"": SubResource("AnimationLibrary_fhblo")
+}
+
+[node name="EnteringSprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_foq0j")
+
+[node name="EnteringRing" type="GPUParticles2D" parent="."]
+emitting = false
+texture = ExtResource("4_givfo")
+local_coords = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="DialogueIntro" parent="." instance=ExtResource("2_nfoym")]
+
+[node name="DialogueOutro" parent="." instance=ExtResource("2_nfoym")]
+
+[node name="MovementPattern" parent="." instance=ExtResource("1_mt3vj")]
+
+[node name="HitSpray" type="GPUParticles2D" parent="."]
+
+[node name="HitSound" parent="." instance=ExtResource("7_en2of")]
+
+[connection signal="area_entered" from="." to="." method="_area_entered"]
+[connection signal="action_started" from="MovementPattern" to="." method="_movement_pattern_action_started"]
+[connection signal="group_finished" from="MovementPattern" to="." method="_intro_movement_pattern_pattern_completed"]

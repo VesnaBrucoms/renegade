@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://dv0stgfkdaoj6"]
+
+[ext_resource type="Script" path="res://dialogue/dialogue_manager.gd" id="1_bp3qn"]
+[ext_resource type="PackedScene" uid="uid://dr2vketpves6d" path="res://dialogue/dialogue_box.tscn" id="3_lyxb4"]
+
+[node name="DialogueManager" type="Node2D"]
+script = ExtResource("1_bp3qn")
+
+[node name="LineTimer" type="Timer" parent="."]
+
+[node name="DialogueBox" parent="." instance=ExtResource("3_lyxb4")]
+visible = false
+offset_left = 245.0
+offset_top = 237.0
+offset_right = 245.0
+offset_bottom = 237.0
+
+[connection signal="timeout" from="LineTimer" to="." method="_line_timer_timeout"]

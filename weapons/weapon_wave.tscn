@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3t17pksupwex"]
+
+[ext_resource type="PackedScene" uid="uid://buq8vecuyiy7o" path="res://weapons/weapon.tscn" id="1_tuu6y"]
+[ext_resource type="Script" path="res://weapons/weapon_wave.gd" id="2_5imb0"]
+
+[node name="WeaponWave" instance=ExtResource("1_tuu6y")]
+editor_description = "Weapon that fires in a wave pattern."
+script = ExtResource("2_5imb0")
+delta = 0.0
+max_delta = 0.0
+direction = Vector2(0, 0)
+num_of_projectiles = 0

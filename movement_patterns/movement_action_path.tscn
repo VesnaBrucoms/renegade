@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://besfo5oweab6v"]
+
+[ext_resource type="PackedScene" uid="uid://b6oisbdbfalfp" path="res://movement_patterns/movement_action.tscn" id="1_owyku"]
+[ext_resource type="Script" path="res://movement_patterns/movement_action_path.gd" id="2_qmtpy"]
+
+[node name="MovementActionPath" instance=ExtResource("1_owyku")]
+editor_description = "Movement action that moves from the first to the last specified list of points."
+script = ExtResource("2_qmtpy")
+destinations = Array[Vector2]([])
+override_speed = 0.0
+face_direction = false
+use_acceleration = false
+acceleration = 0.0

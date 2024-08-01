@@ -1,0 +1,89 @@
+[gd_scene load_steps=18 format=3 uid="uid://swpo2s5njj7q"]
+
+[ext_resource type="PackedScene" uid="uid://kyvsbtipl0jy" path="res://entities/enemy.tscn" id="1_7681n"]
+[ext_resource type="AudioStream" uid="uid://d0m2qlb47mpsq" path="res://assets/sounds/enemy_hit.wav" id="2_7r3pv"]
+[ext_resource type="Script" path="res://entities/tiny_crystal.gd" id="2_t231b"]
+[ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="3_e30dl"]
+[ext_resource type="Texture2D" uid="uid://xa2sjm4x0pll" path="res://assets/sprites/entities/tiny_crystal.png" id="4_ko23f"]
+[ext_resource type="PackedScene" uid="uid://hrj22ka7hkla" path="res://movement_patterns/movement_action_to_location.tscn" id="5_cevs5"]
+[ext_resource type="PackedScene" uid="uid://besfo5oweab6v" path="res://movement_patterns/movement_action_path.tscn" id="6_aiae6"]
+[ext_resource type="Shader" path="res://assets/shaders/shimmer.gdshader" id="6_vhw0q"]
+[ext_resource type="Material" uid="uid://bqvj62flv2b57" path="res://assets/particles/tiny_enter_immunity_ring.tres" id="7_ocgdk"]
+[ext_resource type="Material" uid="uid://xfwyn5r6tkfy" path="res://assets/particles/tiny_crystal_death_spray.tres" id="8_54w2v"]
+[ext_resource type="Texture2D" uid="uid://csm2vliv8sqmc" path="res://assets/shaders/gradient_circle_tiny.png" id="8_nafi7"]
+[ext_resource type="Texture2D" uid="uid://cpyqv0u4dqmww" path="res://assets/sprites/particles/particle_base.png" id="8_roixv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n87vi"]
+resource_local_to_scene = true
+shader = ExtResource("3_e30dl")
+shader_parameter/red_intensity = 0.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6wu2w"]
+noise_type = 0
+seed = 1
+frequency = 0.0009
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ojgmd"]
+seamless = true
+noise = SubResource("FastNoiseLite_6wu2w")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3j4do"]
+resource_local_to_scene = true
+shader = ExtResource("6_vhw0q")
+shader_parameter/noise_scroll = 0.2
+shader_parameter/distortion = 0.125
+shader_parameter/shade = Color(0.75, 0.78, 0.9, 1)
+shader_parameter/specular_colour = Color(0.2, 0.2, 1, 1)
+shader_parameter/light_start = 0.792
+shader_parameter/light_end = 0.917
+shader_parameter/noise = SubResource("NoiseTexture2D_ojgmd")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fl4tf"]
+radius = 6.08276
+
+[node name="TinyCrystal" instance=ExtResource("1_7681n")]
+script = ExtResource("2_t231b")
+enter_destination = Vector2(0, 0)
+enter_speed = 0.0
+enter_acceleration = 0.0
+path_destinations = Array[Vector2]([])
+path_speed = 0.0
+path_face_direction = false
+path_acceleration = 0.0
+max_health = 50
+speed = 100.0
+hit_sound = ExtResource("2_7r3pv")
+death_camera_shake_intensity = 4.0
+
+[node name="MainSprite" parent="." index="0"]
+material = SubResource("ShaderMaterial_n87vi")
+texture = ExtResource("4_ko23f")
+
+[node name="EnteringSprite" parent="." index="1"]
+material = SubResource("ShaderMaterial_3j4do")
+texture = ExtResource("4_ko23f")
+
+[node name="EnteringRing" parent="." index="2"]
+amount = 24
+process_material = ExtResource("7_ocgdk")
+
+[node name="CollisionShape2D" parent="." index="3"]
+shape = SubResource("CircleShape2D_fl4tf")
+
+[node name="Enter" parent="MovementPattern" index="0" instance=ExtResource("5_cevs5")]
+
+[node name="Path" parent="MovementPattern" index="1" instance=ExtResource("6_aiae6")]
+action_group = 2
+
+[node name="DeathExplosion" parent="." index="8"]
+texture = ExtResource("8_nafi7")
+
+[node name="DeathSpray" parent="." index="9"]
+emitting = false
+amount = 24
+process_material = ExtResource("8_54w2v")
+texture = ExtResource("8_roixv")
+lifetime = 0.55
+one_shot = true
+explosiveness = 1.0

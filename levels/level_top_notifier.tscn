@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://sj4g7uis12yr"]
+
+[ext_resource type="Script" path="res://levels/level_top_notifier.gd" id="1_t5dps"]
+
+[node name="LevelTopNotifier" type="VisibleOnScreenNotifier2D"]
+rect = Rect2(0, 0, 640, 10)
+script = ExtResource("1_t5dps")
+tile_size = 16

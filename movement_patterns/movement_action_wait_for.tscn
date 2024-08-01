@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://dk4xdwdopdgyc"]
+
+[ext_resource type="PackedScene" uid="uid://b6oisbdbfalfp" path="res://movement_patterns/movement_action.tscn" id="1_t0l3s"]
+[ext_resource type="Script" path="res://movement_patterns/movement_action_wait_for.gd" id="2_bsl45"]
+
+[node name="MovementActionWaitFor" instance=ExtResource("1_t0l3s")]
+script = ExtResource("2_bsl45")

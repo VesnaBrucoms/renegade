@@ -1,0 +1,129 @@
+[gd_scene load_steps=15 format=3 uid="uid://b7x5oly7k0fen"]
+
+[ext_resource type="Shader" path="res://assets/shaders/cloud.gdshader" id="1_illab"]
+[ext_resource type="Script" path="res://levels/intro.gd" id="1_in0yq"]
+[ext_resource type="PackedScene" uid="uid://b0nc3ituq4b78" path="res://dialogue/dialogue.tscn" id="1_pxhxv"]
+[ext_resource type="Texture2D" uid="uid://ddakomj1mjqhb" path="res://assets/sprites/backgrounds/void_3.png" id="2_1pxle"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_2c5nn"]
+noise_type = 3
+seed = 6
+frequency = 0.0112
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xb386"]
+width = 640
+height = 360
+seamless = true
+seamless_blend_skirt = 0.5
+noise = SubResource("FastNoiseLite_2c5nn")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b5tu8"]
+resource_local_to_scene = true
+shader = ExtResource("1_illab")
+shader_parameter/scroll_speed = 0.1
+shader_parameter/density = 0.05
+shader_parameter/noise = SubResource("NoiseTexture2D_xb386")
+
+[sub_resource type="Animation" id="Animation_ovjtq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/density")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.05]
+}
+
+[sub_resource type="Animation" id="Animation_ygn2c"]
+resource_name = "reduce_density"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/density")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.05, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_6tjmk"]
+resource_name = "reduce_density_2"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/density")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.2, 1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8s6ek"]
+_data = {
+"RESET": SubResource("Animation_ovjtq"),
+"reduce_density": SubResource("Animation_ygn2c"),
+"reduce_density_2": SubResource("Animation_6tjmk")
+}
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_aqa76"]
+noise_type = 3
+seed = 5
+frequency = 0.0052
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_inry4"]
+resource_local_to_scene = true
+width = 640
+height = 360
+seamless = true
+seamless_blend_skirt = 0.571
+noise = SubResource("FastNoiseLite_aqa76")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1r655"]
+resource_local_to_scene = true
+shader = ExtResource("1_illab")
+shader_parameter/scroll_speed = 0.25
+shader_parameter/density = 0.05
+shader_parameter/noise = SubResource("NoiseTexture2D_inry4")
+
+[node name="Intro" type="Node2D"]
+script = ExtResource("1_in0yq")
+
+[node name="LoadDelayTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="Dialogue" parent="." instance=ExtResource("1_pxhxv")]
+
+[node name="Clouds1" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_b5tu8")
+position = Vector2(320, 180)
+texture = ExtResource("2_1pxle")
+
+[node name="ReduceDensity" type="AnimationPlayer" parent="Clouds1"]
+libraries = {
+"": SubResource("AnimationLibrary_8s6ek")
+}
+
+[node name="Clouds2" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_1r655")
+position = Vector2(320, 180)
+texture = ExtResource("2_1pxle")
+
+[node name="ReduceDensity" type="AnimationPlayer" parent="Clouds2"]
+libraries = {
+"": SubResource("AnimationLibrary_8s6ek")
+}
+
+[connection signal="timeout" from="LoadDelayTimer" to="." method="_load_delay_timer_timeout"]

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6oisbdbfalfp"]
+
+[ext_resource type="Script" path="res://movement_patterns/movement_action.gd" id="1_ym2j3"]
+
+[node name="MovementAction" type="Node"]
+editor_description = "Base object for all movement actions."
+script = ExtResource("1_ym2j3")

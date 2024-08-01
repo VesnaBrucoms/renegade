@@ -1,0 +1,165 @@
+[gd_scene load_steps=19 format=3 uid="uid://kyvsbtipl0jy"]
+
+[ext_resource type="Script" path="res://entities/enemy.gd" id="1_x0s11"]
+[ext_resource type="Material" uid="uid://byf2gsg8wm6mp" path="res://assets/materials/enemy_hit_mat.tres" id="2_w8f0x"]
+[ext_resource type="Shader" path="res://assets/shaders/shimmer.gdshader" id="3_fvitk"]
+[ext_resource type="PackedScene" uid="uid://bkwtwsxvi0gwm" path="res://movement_patterns/movement_pattern.tscn" id="3_kd5b5"]
+[ext_resource type="Texture2D" uid="uid://cpyqv0u4dqmww" path="res://assets/sprites/particles/particle_base.png" id="4_1s7r2"]
+[ext_resource type="Material" uid="uid://chdkfwqwqcgu5" path="res://assets/particles/enemy_hit_spray.tres" id="4_skhi8"]
+[ext_resource type="Shader" path="res://assets/shaders/distortion.gdshader" id="6_e4ca1"]
+[ext_resource type="PackedScene" uid="uid://cx2vfhayjj8ky" path="res://audio/random_stream_player.tscn" id="7_eo7tn"]
+
+[sub_resource type="Animation" id="Animation_rq80f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/red_intensity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_ofob8"]
+resource_name = "hit_flash"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/red_intensity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3v1n0"]
+_data = {
+"RESET": SubResource("Animation_rq80f"),
+"hit_flash": SubResource("Animation_ofob8")
+}
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6wu2w"]
+noise_type = 0
+seed = 1
+frequency = 0.0009
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ojgmd"]
+seamless = true
+noise = SubResource("FastNoiseLite_6wu2w")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wbo18"]
+resource_local_to_scene = true
+shader = ExtResource("3_fvitk")
+shader_parameter/noise_scroll = 0.2
+shader_parameter/distortion = 0.05
+shader_parameter/shade = Color(0.0862745, 0.635294, 1, 1)
+shader_parameter/specular_colour = Color(0.2, 0.2, 1, 1)
+shader_parameter/light_start = 0.275
+shader_parameter/light_end = 0.4
+shader_parameter/noise = SubResource("NoiseTexture2D_ojgmd")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mvoha"]
+shader = ExtResource("6_e4ca1")
+shader_parameter/distortion_intensity = 0.5
+
+[sub_resource type="Animation" id="Animation_bpxfd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/distortion_intensity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.5, null]
+}
+
+[sub_resource type="Animation" id="Animation_ucpvq"]
+resource_name = "death"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/distortion_intensity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.5, null]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dboty"]
+_data = {
+"RESET": SubResource("Animation_bpxfd"),
+"death": SubResource("Animation_ucpvq")
+}
+
+[node name="Enemy" type="Area2D"]
+editor_description = "Base object for all enemies (excluding bosses)."
+script = ExtResource("1_x0s11")
+
+[node name="MainSprite" type="Sprite2D" parent="."]
+visible = false
+material = ExtResource("2_w8f0x")
+
+[node name="HitFlashAnimation" type="AnimationPlayer" parent="MainSprite"]
+libraries = {
+"": SubResource("AnimationLibrary_3v1n0")
+}
+speed_scale = 2.0
+
+[node name="EnteringSprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_wbo18")
+
+[node name="EnteringRing" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 48
+texture = ExtResource("4_1s7r2")
+local_coords = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="MovementPattern" parent="." instance=ExtResource("3_kd5b5")]
+
+[node name="HitSpray" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 16
+process_material = ExtResource("4_skhi8")
+texture = ExtResource("4_1s7r2")
+lifetime = 0.2
+one_shot = true
+explosiveness = 1.0
+
+[node name="HitSound" parent="." instance=ExtResource("7_eo7tn")]
+
+[node name="DeathExplosion" type="Sprite2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_mvoha")
+
+[node name="DeathAnimation" type="AnimationPlayer" parent="DeathExplosion"]
+libraries = {
+"": SubResource("AnimationLibrary_dboty")
+}
+
+[node name="DeathSpray" type="GPUParticles2D" parent="."]
+
+[connection signal="area_entered" from="." to="." method="_area_entered"]
+[connection signal="screen_exited" from="VisibilityNotifier" to="." method="_visibility_notifier_screen_exited"]
+[connection signal="action_started" from="MovementPattern" to="." method="_movement_pattern_action_started"]
+[connection signal="group_finished" from="MovementPattern" to="." method="_movement_pattern_group_completed"]
+[connection signal="finished" from="DeathSpray" to="." method="_death_spray_finished"]

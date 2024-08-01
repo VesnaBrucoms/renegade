@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://de311ak31s67q"]
+
+[ext_resource type="PackedScene" uid="uid://buq8vecuyiy7o" path="res://weapons/weapon.tscn" id="1_3b3jp"]
+[ext_resource type="Script" path="res://weapons/weapon_arc.gd" id="2_ijv4d"]
+
+[node name="WeaponArc" instance=ExtResource("1_3b3jp")]
+editor_description = "Weapon that fires in a spray pattern."
+script = ExtResource("2_ijv4d")
+size_of_arc = 0
+direction = Vector2(0, 0)
+num_of_shots = 0
+num_of_projectiles = 0

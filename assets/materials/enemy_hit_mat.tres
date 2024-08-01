@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://byf2gsg8wm6mp"]
+
+[ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="1_qf2rb"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_qf2rb")
+shader_parameter/red_intensity = 0.0

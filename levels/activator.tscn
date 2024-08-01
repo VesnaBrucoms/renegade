@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjl0ywsaryg5q"]
+
+[ext_resource type="Script" path="res://levels/activator.gd" id="1_jm635"]
+
+[node name="Activator" type="VisibleOnScreenNotifier2D"]
+rect = Rect2(0, 0, 640, 10)
+script = ExtResource("1_jm635")
+
+[node name="DebugData" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 10
+
+[connection signal="screen_entered" from="." to="." method="_activator_screen_entered" flags=6]

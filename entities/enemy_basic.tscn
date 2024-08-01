@@ -1,0 +1,64 @@
+[gd_scene load_steps=11 format=3 uid="uid://dlcaf2mrl4bea"]
+
+[ext_resource type="PackedScene" uid="uid://kyvsbtipl0jy" path="res://entities/enemy.tscn" id="1_8llqi"]
+[ext_resource type="Script" path="res://entities/enemy_basic.gd" id="2_d6433"]
+[ext_resource type="PackedScene" uid="uid://hrj22ka7hkla" path="res://movement_patterns/movement_action_to_location.tscn" id="2_ycxrj"]
+[ext_resource type="PackedScene" uid="uid://20koxrawsneo" path="res://movement_patterns/movement_action_wait.tscn" id="3_21pqe"]
+[ext_resource type="AudioStream" uid="uid://d0m2qlb47mpsq" path="res://assets/sounds/enemy_hit.wav" id="3_fe6w7"]
+[ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="3_g55xf"]
+[ext_resource type="PackedScene" uid="uid://de311ak31s67q" path="res://weapons/weapon_arc.tscn" id="5_ndst6"]
+[ext_resource type="PackedScene" uid="uid://cpx0vexoruo13" path="res://projectiles/projectile_enemy_basic.tscn" id="6_wmhkp"]
+[ext_resource type="AudioStream" uid="uid://cw3jjctemgmjo" path="res://assets/sounds/mookLaser.wav" id="7_78hbk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n743q"]
+resource_local_to_scene = true
+shader = ExtResource("3_g55xf")
+shader_parameter/red_intensity = 0.0
+
+[node name="EnemyBasic" instance=ExtResource("1_8llqi")]
+script = ExtResource("2_d6433")
+enter_destination = Vector2(0, 0)
+shoot1_duration = 0.0
+move_to1 = Vector2(0, 0)
+shoot2_duration = 0.0
+move_to2 = Vector2(0, 0)
+shoot3_duration = 0.0
+move_to3 = Vector2(0, 0)
+max_health = 40
+death_camera_shake_intensity = 3.0
+
+[node name="Sprite2D" parent="." index="0"]
+material = SubResource("ShaderMaterial_n743q")
+
+[node name="Enter" parent="MovementPattern" index="0" instance=ExtResource("2_ycxrj")]
+destination = Vector2(323, 30)
+override_speed = 260.0
+
+[node name="Shoot1" parent="MovementPattern" index="1" instance=ExtResource("3_21pqe")]
+
+[node name="MovementActionToLocation" parent="MovementPattern" index="2" instance=ExtResource("2_ycxrj")]
+destination = Vector2(420, 120)
+
+[node name="Shoot2" parent="MovementPattern" index="3" instance=ExtResource("3_21pqe")]
+
+[node name="MovementActionToLocation2" parent="MovementPattern" index="4" instance=ExtResource("2_ycxrj")]
+destination = Vector2(220, 120)
+
+[node name="Shoot3" parent="MovementPattern" index="5" instance=ExtResource("3_21pqe")]
+
+[node name="MoveTo3" parent="MovementPattern" index="6" instance=ExtResource("2_ycxrj")]
+destination = Vector2(323, 30)
+
+[node name="Primary" parent="." index="4" instance=ExtResource("5_ndst6")]
+size_of_arc = 45
+direction = Vector2(0.2, 0.8)
+num_of_shots = 3
+num_of_projectiles = 3
+cooldown = 0.75
+projectile = ExtResource("6_wmhkp")
+projectile_gap = 0.5
+fire_sound = ExtResource("7_78hbk")
+actions_to_fire = Array[String](["Shoot1", "Shoot2", "Shoot3"])
+
+[node name="HitSound" parent="." index="6"]
+stream = ExtResource("3_fe6w7")
